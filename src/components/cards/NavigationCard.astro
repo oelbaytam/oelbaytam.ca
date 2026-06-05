@@ -1,0 +1,143 @@
+---
+import Icon from '../Icon.astro';
+
+interface NavItem {
+  icon: string;
+  title: string;
+  subtitle: string;
+  href: string;
+}
+
+const { items } = Astro.props as { items: NavItem[] };
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function withBase(href: string) {
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) {
+    return href;
+  }
+
+  if (href === '/') {
+    return `${basePath}/` || '/';
+  }
+
+  return `${basePath}${href.startsWith('/') ? href : `/${href}`}`;
+}
+---
+
+<article class="nav-card">
+  <nav aria-label="identity websites">
+    {
+      items.map((item) => (
+        <a class="nav-item" href={withBase(item.href)}>
+          <span class="nav-icon">
+            <Icon name={item.icon} />
+          </span>
+          <span>
+            <strong>{item.title}</strong>
+            <small>{item.subtitle}</small>
+          </span>
+          <Icon name="external" />
+        </a>
+      ))
+    }
+  </nav>
+</article>
+
+<style>
+  .nav-card {
+    width: 100%;
+    padding: 20px 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  nav {
+    display: grid;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .nav-item {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) 18px;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--paper-ink);
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+
+  .nav-item:hover {
+    background: transparent;
+    color: var(--paper-accent);
+  }
+
+  .nav-icon,
+  .nav-item > svg {
+    color: var(--paper-accent);
+  }
+
+  .nav-icon svg,
+  .nav-item > svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  strong,
+  small {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  strong {
+    font-size: 0.96rem;
+    font-weight: 650;
+  }
+
+  small {
+    margin-top: 2px;
+    color: var(--paper-ink-soft);
+    font-size: 0.82rem;
+  }
+
+  @media (max-width: 820px) {
+    .nav-card {
+      padding: 0;
+    }
+
+    nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .nav-item {
+      width: 100%;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 10px;
+      justify-content: start;
+      min-width: 0;
+      padding: 9px 0;
+    }
+
+    .nav-icon {
+      display: grid;
+      place-items: center;
+    }
+
+    strong {
+      max-width: 100%;
+      text-align: left;
+    }
+
+    small,
+    .nav-item > svg {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import { Image } from 'astro:assets';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends Omit<HTMLAttributes<'img'>, 'src'> {
+  src: ImageMetadata | string;
+  alt: string;
+  widths?: number[];
+  sizes?: string;
+}
+
+const { src, alt, widths, sizes, ...imageAttrs } = Astro.props;
+const shouldOptimize = typeof src !== 'string';
+---
+
+{
+  shouldOptimize ? (
+    <Image src={src} alt={alt} widths={widths} sizes={sizes} {...imageAttrs} />
+  ) : (
+    <img src={src} alt={alt} sizes={sizes} {...imageAttrs} />
+  )
+}

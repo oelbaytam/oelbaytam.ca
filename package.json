@@ -1,0 +1,49 @@
+{
+  "name": "astro-navfolio",
+  "type": "module",
+  "version": "0.2.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "fonts:ui": "bun scripts/fonts/subset-ui-font.ts",
+    "build": "bun run fonts:ui && astro build && pagefind --site dist --output-subdir pagefind --root-selector main --exclude-selectors \"[data-pagefind-ignore]\"",
+    "preview": "astro preview",
+    "astro": "astro",
+    "post:new": "bun scripts/new-content.ts blog",
+    "vibe:new": "bun scripts/new-content.ts vibe",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "bun run lint && prettier --check .",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^5.0.6",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
+    "@expressive-code/plugin-collapsible-sections": "^0.42.0",
+    "@expressive-code/plugin-line-numbers": "^0.42.0",
+    "@fontsource/maple-mono": "^5.2.6",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^6.3.5",
+    "astro-expressive-code": "^0.42.0",
+    "lucide-astro": "^0.556.0",
+    "sharp": "^0.34.5",
+    "smol-toml": "^1.6.1",
+    "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^8.60.0",
+    "eslint-plugin-deprecation": "^3.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
+    "pagefind": "^1.5.2",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^6.0.3"
+  },
+  "lint-staged": {
+    "*": "bun run format:check"
+  }
+}

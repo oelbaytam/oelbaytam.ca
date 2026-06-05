@@ -1,0 +1,73 @@
+name: Deploy Astro to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout content docs
+        uses: actions/checkout@v4
+        with:
+          repository: navfolio/astro-navfolio-docs
+          path: .content-docs
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install font subsetting tools
+        run: python -m pip install --user fonttools brotli
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Replace local content with docs content
+        run: |
+          rm -rf src/content
+          mkdir -p src/content
+          rsync -a --delete --exclude='.git' .content-docs/ src/content/
+          rm -rf src/content/.git
+
+      - name: Build site
+        env:
+          SITE_URL: https://astro.navfolio.site
+          SITE_BASE: /
+        run: bun run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,135 @@
+<main class="flow-shell" data-pagefind-body>
+  <section class="flow-grid" aria-label="navfolio personal publication">
+    <section class="flow-column main-column">
+      <slot name="hero" />
+      <slot name="recently" />
+    </section>
+
+    <aside class="flow-column side-column">
+      <slot name="profile" />
+      <slot name="activity" />
+      <slot name="links" />
+    </aside>
+  </section>
+</main>
+
+<style>
+  .flow-shell {
+    width: min(100%, var(--layout-shell-width));
+    margin: 0 auto;
+    padding: 132px var(--layout-page-gutter) var(--layout-page-bottom);
+  }
+
+  .flow-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 760px) minmax(240px, 286px);
+    justify-content: center;
+    gap: 42px;
+    align-items: start;
+  }
+
+  .flow-column {
+    display: grid;
+    align-content: start;
+    min-width: 0;
+  }
+
+  .flow-grid :global(.glass-card) {
+    width: 100%;
+  }
+
+  .flow-grid :global(.profile-card) {
+    min-height: auto;
+    padding: 6px 0 2px;
+  }
+
+  .flow-grid :global(.avatar-wrap) {
+    width: 108px;
+    height: 108px;
+    margin-bottom: 16px;
+  }
+
+  .flow-grid :global(.profile-heading h1) {
+    font-size: 1.52rem;
+  }
+
+  .flow-grid :global(.heatmap-card) {
+    padding: 18px 0;
+  }
+
+  .flow-grid :global(.nav-card) {
+    padding: 2px 0 0;
+  }
+
+  .flow-grid :global(.intro-card) {
+    min-height: 0;
+    padding: 0 0 8px;
+  }
+
+  @media (max-width: 920px) {
+    .flow-grid {
+      grid-template-columns: 1fr;
+      gap: 26px;
+    }
+
+    .side-column {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .flow-shell {
+      padding: 96px 18px 42px;
+    }
+
+    .flow-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .main-column,
+    .side-column {
+      display: contents;
+    }
+
+    .flow-grid :global(.intro-card) {
+      order: 4;
+      min-height: auto;
+      padding: 0;
+      scroll-margin-top: 88px;
+      scroll-snap-align: start;
+      scroll-snap-stop: normal;
+    }
+
+    .flow-grid :global(.profile-card) {
+      order: 1;
+    }
+
+    .flow-grid :global(.nav-card) {
+      order: 2;
+    }
+
+    .flow-grid :global(.heatmap-card) {
+      order: 3;
+    }
+
+    .flow-grid :global(.doing-card) {
+      order: 5;
+    }
+
+    :global(html) {
+      scroll-snap-type: y proximity;
+    }
+  }
+
+  @media (max-width: 820px) and (prefers-reduced-motion: reduce) {
+    .flow-grid :global(.intro-card) {
+      scroll-snap-align: none;
+    }
+
+    :global(html) {
+      scroll-snap-type: none;
+    }
+  }
+</style>

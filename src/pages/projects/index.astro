@@ -1,0 +1,176 @@
+---
+import { getCollection, render } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+import BlogArticle from '../../layouts/BlogArticle.astro';
+import { sortByDateDesc } from '../../utils/content-dates';
+
+const projectEntries = await getCollection('projects');
+const projectIndex = projectEntries.find((entry) => entry.id === 'index');
+const projects = sortByDateDesc(
+  projectEntries.filter((entry) => entry.id !== 'index' && !entry.data.draft),
+);
+
+if (!projectIndex) {
+  throw new Error('Missing src/content/projects/index.mdx content entry.');
+}
+
+const { Content, headings } = await render(projectIndex);
+
+const relatedProjects = projects;
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function withBase(href: string) {
+  if (href === '/') {
+    return `${basePath}/` || '/';
+  }
+
+  return `${basePath}${href.startsWith('/') ? href : `/${href}`}`;
+}
+---
+
+<BlogArticle
+  post={projectIndex}
+  headings={headings}
+  sidebar={{ enable: false, ...projectIndex.data.sidebar }}
+  headerVariant="archive"
+  headerKicker="Project shelf"
+  contentFont="ui"
+>
+  <Content />
+
+  {
+    relatedProjects.length > 0 ? (
+      <section class="project-grid" aria-label="Projects">
+        {relatedProjects.map((project) => (
+          <a class="project-card" href={withBase(`/projects/${project.id}/`)}>
+            <span class="project-meta">
+              <FormattedDate date={project.data.date} />
+            </span>
+            <h2>{project.data.title}</h2>
+            <p>{project.data.description}</p>
+            {project.data.tags.length > 0 && (
+              <span class="project-tags" aria-label="Project tags">
+                {project.data.tags.slice(0, 3).map((tag) => (
+                  <small>{tag}</small>
+                ))}
+              </span>
+            )}
+          </a>
+        ))}
+      </section>
+    ) : (
+      <section class="project-empty" aria-label="Projects empty state">
+        <span aria-hidden="true">01</span>
+        <h2>Projects are being collected.</h2>
+        <p>
+          The route is ready; draft entries stay private until they are marked publishable in the
+          content collection.
+        </p>
+      </section>
+    )
+  }
+</BlogArticle>
+
+<style>
+  .project-meta,
+  .project-empty span,
+  .project-tags small {
+    font-family: var(--font-ui-label);
+  }
+
+  .project-card p,
+  .project-empty p {
+    margin: 0;
+    color: var(--paper-ink-soft);
+    line-height: 1.78;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 34px;
+  }
+
+  .project-card,
+  .project-empty {
+    border: 1px solid var(--paper-line);
+    border-radius: 8px;
+    background: var(--paper-surface);
+    box-shadow: var(--paper-shadow);
+  }
+
+  .project-card {
+    display: grid;
+    gap: 12px;
+    min-height: 210px;
+    padding: 22px;
+    color: var(--paper-ink);
+    text-decoration: none;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      background 180ms ease;
+  }
+
+  .project-card:hover {
+    border-color: var(--paper-line-strong);
+    background: var(--paper-control-hover);
+    transform: translateY(-1px);
+  }
+
+  .project-meta,
+  .project-empty span {
+    color: var(--paper-ink-faint);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  .project-card h2,
+  .project-empty h2 {
+    margin: 0;
+    color: var(--paper-ink);
+    font-size: 1.32rem;
+    line-height: 1.28;
+  }
+
+  .project-card p {
+    max-width: 58ch;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-self: end;
+  }
+
+  .project-tags small {
+    padding: 3px 8px;
+    border: 1px solid var(--paper-line);
+    border-radius: 999px;
+    color: var(--paper-ink-soft);
+    font-size: 0.74rem;
+  }
+
+  .project-empty {
+    display: grid;
+    gap: 10px;
+    max-width: 680px;
+    margin-top: 34px;
+    padding: 24px;
+  }
+
+  @media (max-width: 720px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .project-card,
+    .project-empty {
+      padding: 20px;
+    }
+  }
+</style>

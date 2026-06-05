@@ -1,0 +1,344 @@
+---
+import SmartImage from '../SmartImage.astro';
+import PageView from '../comments/PageView.astro';
+import FormattedDate from '../FormattedDate.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  date?: Date;
+  wordCount: number;
+  readingTime: string;
+  tags?: string[];
+  categories?: { name: string; slug: string }[];
+  series?: { name: string; slug: string; current?: number; total?: number }[];
+  heroImage?: ImageMetadata | string;
+  showHeroImage?: boolean;
+  variant?: 'default' | 'archive';
+  kicker?: string;
+  pathname?: string;
+  showPageView?: boolean;
+}
+
+const {
+  title,
+  description,
+  date,
+  wordCount,
+  readingTime,
+  tags = [],
+  categories = [],
+  series = [],
+  heroImage,
+  showHeroImage = true,
+  variant = 'default',
+  kicker = 'Notebook entry',
+  pathname = Astro.url.pathname,
+  showPageView = false,
+} = Astro.props;
+const wordCountLabel = `${wordCount.toLocaleString('en-US')} words`;
+const hasTags = tags.length > 0;
+const hasCategories = categories.length > 0;
+const hasSeries = series.length > 0;
+const hasGroups = hasCategories || hasSeries;
+const isArchiveHeader = variant === 'archive';
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<header
+  class:list={[
+    'article-header',
+    { 'article-header-archive': isArchiveHeader, 'archive-header-shared': isArchiveHeader },
+  ]}
+>
+  {
+    isArchiveHeader ? (
+      <>
+        <div class="archive-heading archive-header-main">
+          <p class="archive-kicker">{kicker}</p>
+          <h1 class="archive-title" data-pagefind-meta="title">
+            {title}
+          </h1>
+          <div class="meta-line" aria-label="Article metadata">
+            {date && (
+              <span class="meta-item">
+                <FormattedDate date={date} />
+              </span>
+            )}
+            <span class="meta-item">{wordCountLabel}</span>
+            <span class="meta-item">{readingTime}</span>
+            {showPageView && <PageView pathname={pathname} />}
+            {hasTags && (
+              <span class="meta-item tag-list">
+                {tags.map((tag) => (
+                  <span class="tag">#{tag}</span>
+                ))}
+              </span>
+            )}
+          </div>
+          {hasGroups && (
+            <div class="group-meta-line" aria-label="Article groups">
+              {hasCategories && (
+                <span class="group-meta-item">
+                  <Icon name="folder" size={15} />
+                  <span class="group-label">Categories</span>
+                  <span class="group-list">
+                    {categories.map((category) => (
+                      <a class="group-link" href={`${basePath}/blog/categories/${category.slug}/`}>
+                        {category.name}
+                      </a>
+                    ))}
+                  </span>
+                </span>
+              )}
+              {hasSeries && (
+                <span class="group-meta-item">
+                  <Icon name="layers" size={15} />
+                  <span class="group-label">Series</span>
+                  <span class="group-list">
+                    {series.map((item) => (
+                      <a class="group-link" href={`${basePath}/blog/series/${item.slug}/`}>
+                        {item.name}
+                        {item.current && item.total ? ` ${item.current}/${item.total}` : ''}
+                      </a>
+                    ))}
+                  </span>
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+        {description && <p class="archive-note">{description}</p>}
+      </>
+    ) : (
+      <>
+        <h1 data-pagefind-meta="title">{title}</h1>
+
+        <div class="meta-line" aria-label="Article metadata">
+          {date && (
+            <span class="meta-item">
+              <FormattedDate date={date} />
+            </span>
+          )}
+          <span class="meta-item">{wordCountLabel}</span>
+          <span class="meta-item">{readingTime}</span>
+          {showPageView && <PageView pathname={pathname} />}
+          {hasTags && (
+            <span class="meta-item tag-list">
+              {tags.map((tag) => (
+                <span class="tag">#{tag}</span>
+              ))}
+            </span>
+          )}
+        </div>
+        {hasGroups && (
+          <div class="group-meta-line" aria-label="Article groups">
+            {hasCategories && (
+              <span class="group-meta-item">
+                <Icon name="folder" size={15} />
+                <span class="group-label">Categories</span>
+                <span class="group-list">
+                  {categories.map((category) => (
+                    <a class="group-link" href={`${basePath}/blog/categories/${category.slug}/`}>
+                      {category.name}
+                    </a>
+                  ))}
+                </span>
+              </span>
+            )}
+            {hasSeries && (
+              <span class="group-meta-item">
+                <Icon name="layers" size={15} />
+                <span class="group-label">Series</span>
+                <span class="group-list">
+                  {series.map((item) => (
+                    <a class="group-link" href={`${basePath}/blog/series/${item.slug}/`}>
+                      {item.name}
+                      {item.current && item.total ? ` ${item.current}/${item.total}` : ''}
+                    </a>
+                  ))}
+                </span>
+              </span>
+            )}
+          </div>
+        )}
+      </>
+    )
+  }
+
+  {
+    showHeroImage && heroImage && (
+      <figure class="article-hero-image">
+        <SmartImage width={1020} height={510} src={heroImage} alt="" />
+      </figure>
+    )
+  }
+</header>
+
+<style>
+  .article-header {
+    display: grid;
+    gap: 14px;
+    width: 100%;
+    max-width: var(--article-content-max, 720px);
+    margin-bottom: 34px;
+  }
+
+  .article-header-archive {
+    max-width: none;
+    margin-bottom: 54px;
+  }
+
+  .archive-heading {
+    min-width: 0;
+  }
+
+  h1 {
+    margin: 0;
+    color: var(--paper-ink);
+    font-family: var(--font-heading);
+    font-size: clamp(2.15rem, 4.8vw, 3.45rem);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  :global(.blog-content-ui) h1 {
+    font-family: var(--font-page-heading);
+  }
+
+  .archive-heading .meta-line {
+    margin-top: 14px;
+  }
+
+  .meta-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 6px;
+    color: var(--paper-ink-faint);
+    font-family: var(--font-meta);
+    font-size: 0.84rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .meta-item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .meta-item + .meta-item::before {
+    margin: 0 9px;
+    color: var(--paper-ink-faint);
+    content: '\00b7';
+    opacity: 0.7;
+  }
+
+  .tag-list {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    color: var(--paper-accent);
+    font-family: var(--font-serif-cn);
+    font-weight: 700;
+  }
+
+  .group-meta-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+    color: var(--paper-ink-faint);
+    font-family: var(--font-meta);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .group-meta-item {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    min-height: 30px;
+    padding: 4px 8px;
+    border: 1px solid var(--paper-line);
+    border-radius: 999px;
+    background: var(--paper-control);
+  }
+
+  .group-meta-item :global(.site-icon) {
+    color: var(--paper-accent);
+    opacity: 0.82;
+  }
+
+  .group-label {
+    color: var(--paper-ink-faint);
+  }
+
+  .group-list {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .group-link {
+    color: var(--paper-accent);
+    font-family: var(--font-serif-cn);
+    font-weight: 700;
+    text-decoration-color: rgba(102, 125, 109, 0.25);
+    text-underline-offset: 3px;
+  }
+
+  .group-link + .group-link::before {
+    margin: 0 6px 0 0;
+    color: var(--paper-ink-faint);
+    content: '\00b7';
+  }
+
+  .article-hero-image {
+    width: 100%;
+    height: 84px;
+    margin: 10px 0 0;
+    overflow: hidden;
+    border: 1px solid var(--paper-line);
+    border-radius: 7px;
+    background: var(--paper-surface-muted);
+  }
+
+  .article-hero-image :global(img) {
+    display: block;
+    width: 100%;
+    height: 84px;
+    object-fit: cover;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    filter: saturate(0.72) contrast(0.96);
+  }
+
+  @media (max-width: 640px) {
+    .article-header {
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .article-header-archive {
+      margin-bottom: 34px;
+    }
+
+    h1 {
+      font-size: 2.08rem;
+      line-height: 1.1;
+    }
+
+    .article-hero-image,
+    .article-hero-image :global(img) {
+      height: 84px;
+      border-radius: 6px;
+    }
+  }
+</style>

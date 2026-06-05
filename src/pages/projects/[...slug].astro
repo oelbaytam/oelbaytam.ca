@@ -1,0 +1,26 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BlogArticle from '../../layouts/BlogArticle.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ id, data }) => id !== 'index' && !data.draft);
+
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: project,
+  }));
+}
+
+type Props = CollectionEntry<'projects'>;
+
+const project = Astro.props;
+const { Content, headings } = await render(project);
+---
+
+<BlogArticle
+  post={project}
+  headings={headings}
+  sidebar={{ enable: false, ...project.data.sidebar }}
+>
+  <Content />
+</BlogArticle>

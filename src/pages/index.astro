@@ -1,0 +1,44 @@
+---
+import IntroCard from '../components/cards/IntroCard.astro';
+import NavigationCard from '../components/cards/NavigationCard.astro';
+import ProfileCard from '../components/cards/ProfileCard.astro';
+import DashboardFlow from '../components/layout/DashboardFlow.astro';
+import BlogHeatmap from '../components/widgets/BlogHeatmap.astro';
+import DoingCard from '../components/widgets/DoingCard.astro';
+import { getSiteConfig } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { home, profile, site } = await getSiteConfig();
+---
+
+<BaseLayout title={site.pageTitle} description={site.pageDescription}>
+  <div class="publication-bg" aria-hidden="true"></div>
+  <DashboardFlow>
+    <Fragment slot="profile">
+      <ProfileCard profile={profile} />
+    </Fragment>
+
+    <Fragment slot="hero">
+      <IntroCard intro={home.intro} quote={home.quote} />
+    </Fragment>
+
+    <Fragment slot="activity">
+      <BlogHeatmap
+        weeks={home.latest.heatmapWeeks}
+        showLatest={home.latest.showHeatmapLatest}
+        latestCount={home.latest.count}
+        excludeDraft={home.latest.excludeDraft}
+        startDate={home.latest.startDate || null}
+        dateArchiveBaseHref={home.latest.dateArchiveBaseHref || undefined}
+      />
+    </Fragment>
+
+    <Fragment slot="links">
+      <NavigationCard items={home.navigation} />
+    </Fragment>
+
+    <Fragment slot="recently">
+      <DoingCard items={home.doing} />
+    </Fragment>
+  </DashboardFlow>
+</BaseLayout>

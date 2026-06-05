@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import BlogTopNav from '../../components/blog/BlogTopNav.astro';
+import BlogArchive from '../../components/blog/BlogArchive.astro';
+import GroupNav from '../../components/blog/GroupNav.astro';
+import { getSiteConfig } from '../../data/site';
+import { sortByDateDesc } from '../../utils/content-dates';
+
+const { site, theme, blog } = await getSiteConfig();
+const palette = theme.palette;
+const posts = sortByDateDesc(await getCollection('blog', ({ data }) => !data.draft));
+const postsPerPage = blog.postsPerPage;
+const totalPages = Math.max(1, Math.ceil(posts.length / postsPerPage));
+const page = {
+  data: posts.slice(0, postsPerPage),
+  currentPage: 1,
+  lastPage: totalPages,
+  total: posts.length,
+  size: postsPerPage,
+  url: {
+    current: '/blog/',
+    next: totalPages > 1 ? '/blog/page/2/' : undefined,
+  },
+};
+---
+
+<!doctype html>
+<html lang="zh-CN" data-palette={palette}>
+  <head>
+    <BaseHead title={site.title} description={site.description} />
+    <style>
+      main {
+        width: min(100%, var(--layout-shell-width));
+        max-width: none;
+        padding: 118px var(--layout-page-gutter) var(--layout-page-bottom);
+      }
+
+      @media (max-width: 720px) {
+        main {
+          padding-top: 88px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <BlogTopNav />
+    <main data-pagefind-body>
+      <BlogArchive page={page}>
+        <GroupNav slot="after-header" />
+      </BlogArchive>
+    </main>
+    <Footer />
+  </body>
+</html>
