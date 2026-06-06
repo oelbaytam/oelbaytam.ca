@@ -1,0 +1,260 @@
+---
+import { getSiteConfig } from '../../data/site';
+
+interface Props {
+  excludeNames?: string[];
+}
+
+const { excludeNames = [] } = Astro.props;
+const { profile } = await getSiteConfig();
+const githubUsername = profile.github.split('/').pop();
+---
+
+<div
+  id="github-projects-container"
+  data-username={githubUsername}
+  data-exclude={JSON.stringify(excludeNames)}
+>
+  <noscript>
+    <p class="noscript-note">
+      JavaScript is required to load more projects live from GitHub. You can browse them all on <a
+        href={profile.github}>GitHub</a
+      >.
+    </p>
+  </noscript>
+
+  <section class="github-section">
+    <div class="github-label">Repositories</div>
+    <div id="github-repos-grid" class="project-grid">
+      <div class="loading">Loading repositories from GitHub...</div>
+    </div>
+  </section>
+
+  <section class="github-section">
+    <div class="github-label">Assorted Scripts (Gists)</div>
+    <div id="github-gists-grid" class="project-grid">
+      <div class="loading">Loading gists from GitHub...</div>
+    </div>
+  </section>
+</div>
+
+<script>
+  async function fetchGitHubData() {
+    const container = document.getElementById('github-projects-container');
+    if (!container) return;
+
+    const username = container.dataset.username;
+    const excludeNames = JSON.parse(container.dataset.exclude || '[]');
+
+    const reposGrid = document.getElementById('github-repos-grid');
+    const gistsGrid = document.getElementById('github-gists-grid');
+
+    function createCard(url, title, description, lang, dateStr) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.className = 'project-card';
+
+      a.innerHTML = `
+        <span class="project-meta">${dateStr}</span>
+        <h2>${title}</h2>
+        <p>${description || 'No description available.'}</p>
+        <div class="project-tags">
+          ${lang ? `<small>${lang}</small>` : ''}
+          <small>GitHub</small>
+        </div>
+      `;
+      return a;
+    }
+
+    // Fetch Repos
+    try {
+      const response = await fetch(
+        `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`,
+      );
+      const repos = await response.json();
+
+      if (Array.isArray(repos)) {
+        const filtered = repos.filter(
+          (r) =>
+            !r.fork &&
+            !excludeNames.includes(r.name) &&
+            !excludeNames.includes(r.name.toLowerCase()),
+        );
+
+        if (reposGrid) {
+          reposGrid.innerHTML = '';
+          if (filtered.length === 0) {
+            reposGrid.innerHTML = '<p class="empty-msg">No additional repositories found.</p>';
+          } else {
+            filtered.forEach((r) => {
+              const date = new Date(r.updated_at).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              });
+              reposGrid.appendChild(
+                createCard(r.html_url, r.name, r.description, r.language, date),
+              );
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching repos:', err);
+      if (reposGrid) reposGrid.innerHTML = '<p class="error-msg">Failed to load repositories.</p>';
+    }
+
+    // Fetch Gists
+    try {
+      const response = await fetch(`https://api.github.com/users/${username}/gists`);
+      const gists = await response.json();
+
+      if (Array.isArray(gists)) {
+        if (gistsGrid) {
+          gistsGrid.innerHTML = '';
+          if (gists.length === 0) {
+            gistsGrid.innerHTML = '<p class="empty-msg">No gists found.</p>';
+          } else {
+            gists.forEach((g) => {
+              const filename = Object.keys(g.files)[0];
+              const file = g.files[filename];
+              const date = new Date(g.created_at).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              });
+              gistsGrid.appendChild(
+                createCard(g.html_url, filename, g.description, file.language || 'Text', date),
+              );
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching gists:', err);
+      if (gistsGrid) gistsGrid.innerHTML = '<p class="error-msg">Failed to load gists.</p>';
+    }
+  }
+
+  // Initialize
+  fetchGitHubData();
+  document.addEventListener('astro:page-load', fetchGitHubData);
+</script>
+
+<style>
+  .github-section {
+    margin-top: 48px;
+  }
+
+  .github-label {
+    margin-bottom: 24px;
+    color: var(--paper-ink-faint);
+    font-family: var(--font-ui-label);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .loading,
+  .empty-msg,
+  .error-msg,
+  .noscript-note {
+    grid-column: 1 / -1;
+    padding: 40px;
+    text-align: center;
+    color: var(--paper-ink-soft);
+    border: 1px dashed var(--paper-line);
+    border-radius: 8px;
+  }
+
+  .noscript-note a {
+    color: var(--paper-ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* Replicating existing project-grid and project-card styles for the dynamic content */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  @media (max-width: 720px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Note: The .project-card and other styles are expected to be inherited from the parent page
+     or we can re-define them here to be safe. Since Astro styles are scoped by default,
+     we might need to use :global() or just replicate them.
+     Replicating them ensures consistency even if the parent page changes. */
+</style>
+
+<style is:global>
+  /* We use :global because the elements are created dynamically via JS */
+  #github-projects-container .project-card {
+    display: grid;
+    gap: 12px;
+    min-height: 210px;
+    padding: 22px;
+    color: var(--paper-ink);
+    text-decoration: none;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      background 180ms ease;
+    border: 1px solid var(--paper-line);
+    border-radius: 8px;
+    background: var(--paper-surface);
+    box-shadow: var(--paper-shadow);
+  }
+
+  #github-projects-container .project-card:hover {
+    border-color: var(--paper-line-strong);
+    background: var(--paper-control-hover);
+    transform: translateY(-1px);
+  }
+
+  #github-projects-container .project-meta {
+    color: var(--paper-ink-faint);
+    font-family: var(--font-ui-label);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  #github-projects-container .project-card h2 {
+    margin: 0;
+    color: var(--paper-ink);
+    font-size: 1.32rem;
+    line-height: 1.28;
+  }
+
+  #github-projects-container .project-card p {
+    margin: 0;
+    color: var(--paper-ink-soft);
+    line-height: 1.78;
+    max-width: 58ch;
+  }
+
+  #github-projects-container .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-self: end;
+  }
+
+  #github-projects-container .project-tags small {
+    padding: 3px 8px;
+    border: 1px solid var(--paper-line);
+    border-radius: 999px;
+    color: var(--paper-ink-soft);
+    font-family: var(--font-ui-label);
+    font-size: 0.74rem;
+  }
+</style>

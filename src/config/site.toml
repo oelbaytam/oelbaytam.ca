@@ -1,10 +1,10 @@
 [config.site]
-title = "navfolio"
-description = "A personal navigation portfolio starter built with Astro."
-pageTitle = "navfolio | Digital Publication Space"
-pageDescription = "A calm AI-native personal publication space for notes, links, and writing."
-repository = "https://github.com/dodolalorc/astro-navfolio"
-footerNote = "Released as an open-source starter."
+title = "oelbaytam"
+description = "Omar El-Baytam's Personal Site"
+pageTitle = "oelbaytam"
+pageDescription = "About Me"
+repository = "https://github.com/oelbaytam/oelbaytam.ca"
+footerNote = "Working hard or hardly working?"
 
 [config.vibe]
 showTrail = true
@@ -12,7 +12,7 @@ showTrail = true
 [config.theme]
 # Available palettes:
 # green-soft, green-vivid, rose-soft, pink-soft, purple-soft, blue-soft, orange-soft, brown-soft
-palette = "green-soft"
+palette = "green-vivid"
 
 [config.code]
 lightTheme = "catppuccin-latte"
@@ -37,10 +37,10 @@ maxResults = 6
 postsPerPage = 6
 
 [config.comments.giscus]
-repo = "dodolalorc/astro-navfolio"
-repo_id = "R_kgDOSaQejw"
-category = "Announcements"
-category_id = "DIC_kwDOSaQej84C9di9"
+repo = "oelbaytam/oelbaytam.ca"
+repo_id = "R_kgDOSyM7BQ"
+category = "Giscus Comments"
+category_id = "DIC_kwDOSyM7Bc4C-mD1"
 mapping = "pathname"
 strict = "0"
 reactions_enabled = "1"
@@ -48,7 +48,7 @@ emit_metadata = "0"
 input_position = "top"
 light_theme = "light"
 dark_theme = "dark"
-lang = "zh-CN"
+lang = "en"
 loading = "lazy"
 
 [config.comments.utterances]
@@ -59,20 +59,19 @@ theme = "github-light"
 
 [config.comments.waline]
 server_url = ""
-lang = "zh-CN"
+lang = "en"
 dark = "html.dark"
 pageview = true
 comment = true
 
 [config.profile]
-name = "navfolio"
-handle = "@navfolio"
-role = "A Cat Developer"
-company = "Independent Studio"
-location = "Remote"
-email = "hello@navfolio.site"
-website = "https://astro.navfolio.site/"
-github = "https://github.com/dodolalorc/astro-navfolio"
+name = "Omar El-Baytam"
+handle = "@oelbaytam"
+company = "N/A"
+location = "Toronto, ON"
+email = "omar@oelbaytam.ca"
+website = "https://oelbaytam.ca/"
+github = "https://github.com/oelbaytam"
 meta = "Open-source maintainer"
 avatar = "/images/logo.png"
 
@@ -88,35 +87,33 @@ href = "/blog"
 label = "Projects"
 href = "/projects"
 
-[[config.topNav.links]]
-label = "Vibe"
-href = "/vibe"
-
-[[config.topNav.links]]
-label = "About"
-href = "/about"
-
 [config.home]
 layout = "grid"
 
 [config.home.quote]
 text = [
-  "Navigate your world,",
-  "Showcase your story,",
-  "and keep everything in one place.",
+  "\"Study without desire spoils the memory,",
+  " and it retains nothing that it takes in.\"",
+  " — Leonardo da Vinci",
 ]
 image = "/images/logo-with-name.png"
 
 [config.home.intro]
-title = "here is navfolio"
-name = "navfolio"
+title = "oelbaytam"
+name = "oelbaytam"
 body = [
-  "The name combines \"Navigation\" and \"Portfolio\".",
-  "Navfolio prioritizes lightweight organization, seamless reading, and developer-friendly aesthetics.",
-  "It’s less a resume than a personal OS for your ideas, projects, notes, and online presence.",
-  "这个名字融合了“导航”与“作品集”。",
-  "Navfolio 专注于轻量级组织、流畅的阅读体验，以及对开发者友好的美学设计。",
-  "它不像一份简历，更像是一个属于你自己的个人操作系统——承载想法、项目、笔记与网络足迹。",
+  "Thanks for visiting my site! I plan on using the blog as a diary for my thoughts, Projects ",
+  """My name is Omar El-Baytam and I am a recent graduate
+     from Wilfrid Laurier University's Computer Science program.
+     At University I learned lots about computers but one class,
+     Physical Computing, stuck with me more than my others.
+     This class taught me how computers sense data in the real
+     world and how they communicate. This inspired my intrest
+     in Microcontrollers, IoT, and Electronics of all kinds.""",
+  """In pursuit of more Embedded Development knowledge I am
+     constantly working on improving my skills in C/C++ and
+     writing the occasional backend in Python. At the moment
+     I am tinkering with ESP-IDF Framework and FreeRTOS.""",
 ]
 image = "/images/logo-cat.png"
 
@@ -129,37 +126,37 @@ startDate = ""
 dateArchiveBaseHref = ""
 
 [[config.home.navigation]]
-icon = "compass"
-title = "Portfolio"
-subtitle = "Selected work and case studies"
-href = "https://astro.navfolio.site/"
-
-[[config.home.navigation]]
 icon = "pen"
 title = "Blog"
-subtitle = "Essays, notes, and field reports"
+subtitle = ""
 href = "/blog"
 
 [[config.home.navigation]]
 icon = "briefcase"
 title = "Resume"
-subtitle = "Career profile and experience"
-href = "https://github.com/dodolalorc/navfolio"
+subtitle = ""
+href = "/resume-no-contact.pdf"
 
 [[config.home.navigation]]
-icon = "github"
-title = "Open Source"
-subtitle = "Code, experiments, and tools"
-href = "https://github.com/dodolalorc/astro-navfolio"
+icon = "mail"
+title = "Contact Email"
+subtitle = ""
+href = "mailto:omar@oelbaytam.ca"
+
+[[config.home.navigation]]
+icon = "linkedin"
+title = "LinkedIn"
+subtitle = ""
+href = "https://www.linkedin.com/in/oelbaytam/"
 
 [[config.home.connect]]
 label = "GitHub"
-href = "https://github.com/dodolalorc/astro-navfolio"
+href = "https://github.com/oelbaytam"
 icon = "github"
 
 [[config.home.connect]]
 label = "Website"
-href = "https://astro.navfolio.site/"
+href = "https://oelbaytam.ca/"
 icon = "compass"
 
 [[config.home.connect]]
@@ -174,7 +171,7 @@ icon = "repo"
 
 [[config.home.connect]]
 label = "Email"
-href = "mailto:hello@navfolio.site"
+href = "mailto:omar@oelbaytam.ca"
 icon = "mail"
 
 [[config.home.doing]]

@@ -31,9 +31,9 @@ interface Props {
 const {
   page,
   postOffset = 0,
-  headerKicker = 'Notebook archive',
-  headerTitle = 'Writing notes',
-  headerNote = 'Loose pages, technical margins, and small notes gathered into a readable stack.',
+  headerKicker = 'Index',
+  headerTitle = 'Blog',
+  headerNote = "Blog? Diary? Log? I don't know!",
 } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const hasPagination = page.lastPage > 1;

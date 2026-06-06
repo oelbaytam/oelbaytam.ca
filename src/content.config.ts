@@ -211,7 +211,6 @@ const siteConfig = defineCollection({
     profile: z.object({
       name: z.string(),
       handle: z.string(),
-      role: z.string(),
       company: z.string(),
       location: z.string(),
       email: z.email(),

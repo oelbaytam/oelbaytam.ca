@@ -23,6 +23,7 @@ import {
   Star,
   Twitter,
   Tv,
+  Linkedin,
   type Props as LucideProps,
 } from 'lucide-astro';
 
@@ -58,6 +59,7 @@ const icons = {
   sparkle: Sparkles,
   star: Star,
   twitter: Twitter,
+  linkedin: Linkedin,
 };
 
 const IconComponent = icons[name as keyof typeof icons] ?? Sparkles;

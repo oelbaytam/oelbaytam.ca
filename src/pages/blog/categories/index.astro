@@ -14,49 +14,11 @@ const categories = getAllCategories(await getCollection('blog', ({ data }) => !d
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-palette={palette}>
+<html lang="en" data-palette={palette}>
   <head>
     <BaseHead title={`${site.title} | Categories`} description={site.description} />
-    <style>
-      main {
-        width: min(100%, var(--layout-shell-width));
-        max-width: none;
-        padding: 118px var(--layout-page-gutter) var(--layout-page-bottom);
-      }
-
-      .category-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .empty-note {
-        max-width: 620px;
-        margin: 0;
-        color: var(--paper-ink-soft);
-        font-family: var(--font-serif-cn);
-        font-size: 1rem;
-        line-height: 1.75;
-      }
-
-      @media (max-width: 900px) {
-        .category-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 720px) {
-        main {
-          padding-top: 88px;
-        }
-
-        .category-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
   </head>
-  <body>
+  <body class="archive-page-body">
     <BlogTopNav />
     <main data-pagefind-body>
       <BackLink href="/blog/" label="Back to blog" />
@@ -65,9 +27,6 @@ const categories = getAllCategories(await getCollection('blog', ({ data }) => !d
           <p class="archive-kicker">Browse notes</p>
           <h1 class="archive-title">Categories</h1>
         </div>
-        <p class="archive-note">
-          A quiet index of recurring topics, gathered from article frontmatter.
-        </p>
       </header>
 
       {
@@ -85,3 +44,49 @@ const categories = getAllCategories(await getCollection('blog', ({ data }) => !d
     <Footer />
   </body>
 </html>
+
+<style>
+  .archive-page-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1 0 auto;
+    width: min(100%, var(--layout-shell-width));
+    max-width: none;
+    padding: 118px var(--layout-page-gutter) var(--layout-page-bottom);
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .empty-note {
+    max-width: 620px;
+    margin: 0;
+    color: var(--paper-ink-soft);
+    font-family: var(--font-serif-cn);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  @media (max-width: 900px) {
+    .category-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    main {
+      padding-top: 88px;
+    }
+
+    .category-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

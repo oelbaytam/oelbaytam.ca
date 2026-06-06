@@ -1,4 +1,6 @@
 ---
+import TitleMoving from '../TitleMoving.astro';
+
 interface Intro {
   title: string;
   name: string;
@@ -14,21 +16,11 @@ const { intro, quote } = Astro.props as { intro: Intro; quote?: Quote };
 
 <article class="glass-card intro-card">
   <div class="intro-copy">
-    {
-      quote && (
-        <div class="quote-mark" aria-hidden="true">
-          "
-        </div>
-      )
-    }
-    <h2>
-      <span aria-hidden="true">Hi,</span>
-      {intro.title.replace(intro.name, '')}<em>{intro.name}</em>
-    </h2>
+    <TitleMoving />
     {
       quote && (
         <blockquote>
-          <span>- {quote.text.slice(0, 2).join(' ')}</span>
+          <span>{quote.text.slice(0, 2).join(' ')}</span>
           <span>{quote.text.slice(2).join(' ')}</span>
         </blockquote>
       )

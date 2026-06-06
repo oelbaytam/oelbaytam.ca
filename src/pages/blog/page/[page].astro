@@ -45,27 +45,14 @@ const { page, postOffset } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-palette={palette}>
+<html lang="en" data-palette={palette}>
   <head>
     <BaseHead
       title={`${site.title} | Blog page ${page.currentPage}`}
       description={site.description}
     />
-    <style>
-      main {
-        width: min(100%, var(--layout-shell-width));
-        max-width: none;
-        padding: 118px var(--layout-page-gutter) var(--layout-page-bottom);
-      }
-
-      @media (max-width: 720px) {
-        main {
-          padding-top: 88px;
-        }
-      }
-    </style>
   </head>
-  <body>
+  <body class="archive-page-body">
     <BlogTopNav />
     <main data-pagefind-body>
       <BlogArchive page={page} postOffset={postOffset} />
@@ -73,3 +60,24 @@ const { page, postOffset } = Astro.props;
     <Footer />
   </body>
 </html>
+
+<style>
+  .archive-page-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1 0 auto;
+    width: min(100%, var(--layout-shell-width));
+    max-width: none;
+    padding: 118px var(--layout-page-gutter) var(--layout-page-bottom);
+  }
+
+  @media (max-width: 720px) {
+    main {
+      padding-top: 88px;
+    }
+  }
+</style>

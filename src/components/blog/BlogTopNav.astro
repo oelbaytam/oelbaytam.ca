@@ -45,9 +45,6 @@ function isActive(href: string) {
 const routeLabels: Record<string, string> = {
   '/blog': 'blog',
   '/projects': 'projects',
-  '/vibe': 'vibe',
-  '/archive': 'archive',
-  '/about': 'about',
 };
 const activeRoute = Object.entries(routeLabels).find(
   ([route]) => currentPath === route || currentPath.startsWith(`${route}/`),
@@ -333,7 +330,7 @@ const shouldShowTocAction = showTocIcon && tocItems.length > 0;
     grid-template-columns: auto 1fr auto;
     gap: 24px;
     align-items: center;
-    width: min(calc(100% - 32px), 900px);
+    width: min(calc(100% - 32px), 1136px);
     min-height: 56px;
     padding: 10px 14px 10px 18px;
     margin: 0 auto;

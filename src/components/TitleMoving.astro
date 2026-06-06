@@ -1,0 +1,111 @@
+---
+
+---
+
+<h2>
+  <div class="title">
+    <span class="o">o</span><span class="mar-wrap"><span class="mar">mar&nbsp;</span></span><span
+      class="elbaytam">elbaytam</span
+    ><span class="ca-wrap"><span class="ca">.ca</span></span>
+  </div>
+</h2>
+
+<style>
+  h2 {
+    margin: 0 0 18px;
+    color: var(--paper-ink);
+    max-width: none;
+    font-size: clamp(2.2rem, 4vw, 3.35rem);
+    line-height: 1.04;
+    white-space: nowrap;
+  }
+
+  h2 span {
+    color: var(--paper-accent);
+    font-style: normal;
+  }
+
+  h2 em {
+    color: var(--paper-accent);
+    font-style: italic;
+  }
+  /* Wrappers handle the horizontal "squish" */
+  /* Using inline-flex ensures the wrapper inherits the text baseline */
+  .mar-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    overflow: hidden;
+    width: 4ch;
+    height: 1em;
+    animation: mar-squish 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .ca-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    overflow: hidden;
+    width: 0;
+    height: 1em;
+    animation: ca-squish 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Inner spans handle the vertical "slide" */
+  /* Using relative positioning so they still provide a baseline to the wrappers */
+  .mar {
+    position: relative;
+    animation: mar-up 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .ca {
+    position: relative;
+    transform: translateY(-1em);
+    opacity: 0;
+    animation: ca-down 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Animations */
+
+  @keyframes mar-squish {
+    0%,
+    40% {
+      width: 4ch;
+    }
+    100% {
+      width: 0;
+    }
+  }
+
+  @keyframes mar-up {
+    0%,
+    40% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-1em);
+      opacity: 0;
+    }
+  }
+
+  @keyframes ca-squish {
+    0%,
+    40% {
+      width: 0;
+    }
+    100% {
+      width: 3ch;
+    }
+  }
+
+  @keyframes ca-down {
+    0%,
+    40% {
+      transform: translateY(-1em);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style>

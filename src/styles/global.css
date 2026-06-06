@@ -113,6 +113,9 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   font-family: var(--font-body);
   margin: 0;
   padding: 0;
@@ -127,9 +130,10 @@ body {
 }
 
 main {
+  flex-grow: 1;
   width: min(100%, var(--layout-shell-width));
   max-width: none;
-  margin: auto;
+  margin: 0 auto;
   padding: var(--layout-page-top) var(--layout-page-gutter) var(--layout-page-bottom);
 }
 

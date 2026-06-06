@@ -1,5 +1,6 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
 import BlogTopNav from '../components/blog/BlogTopNav.astro';
 import { getThemePalette } from '../data/site';
 
@@ -13,12 +14,27 @@ const palette = await getThemePalette();
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-palette={palette}>
+<html lang="en" data-palette={palette}>
   <head>
     <BaseHead title={title} description={description} />
   </head>
-  <body>
+  <body class="base-layout-body">
     <BlogTopNav />
-    <slot />
+    <main>
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>
+
+<style>
+  .base-layout-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+</style>
