@@ -136,7 +136,10 @@ for (const file of lightweightContentFiles) {
 }
 
 const uiChars = [...chars].sort((a, b) => a.codePointAt(0)! - b.codePointAt(0)!).join('');
-if (!uiChars) throw new Error('No CJK UI characters were found for font subsetting.');
+if (!uiChars) {
+  console.log('No CJK UI characters were found for font subsetting. Skipping.');
+  process.exit(0);
+}
 
 mkdirSync(join(projectRoot, 'scripts/fonts'), { recursive: true });
 mkdirSync(join(projectRoot, 'public/fonts'), { recursive: true });

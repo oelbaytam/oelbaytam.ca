@@ -276,12 +276,6 @@ const siteConfig = defineCollection({
         }),
       navigation: z.array(navigationItemSchema),
       connect: z.array(linkSchema.required({ icon: true })),
-      doing: z.array(
-        z.object({
-          text: z.string(),
-          mark: z.string(),
-        }),
-      ),
     }),
   }),
 });
