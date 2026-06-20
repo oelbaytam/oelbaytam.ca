@@ -1,8 +1,8 @@
 [config.site]
-title = "oelbaytam"
-description = "Omar El-Baytam's Personal Site"
+title = "Blog"
+description = "C'mon you gotta at least check it out."
 pageTitle = "oelbaytam"
-pageDescription = "About Me"
+pageDescription = "The real deal."
 repository = "https://github.com/oelbaytam/oelbaytam.ca"
 footerNote = "Working hard or hardly working?"
 
@@ -102,7 +102,7 @@ image = "/images/logo-with-name.png"
 title = "oelbaytam"
 name = "oelbaytam"
 body = [
-  "Thanks for visiting my site! I plan on using the blog as a diary for my thoughts, Projects ",
+  "Thanks for visiting my site! I plan on using the blog as a diary for my thoughts and a log for my projects. ",
   """My name is Omar El-Baytam and I am a recent graduate
      from Wilfrid Laurier University's Computer Science program.
      At University I learned lots about computers but one class,
